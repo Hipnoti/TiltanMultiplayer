@@ -156,7 +156,6 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             = new ExitGames.Client.Photon.Hashtable();
         hashtable.Add(Constants.PLAYER_STRENGTH_SCORE_PROPERTY_KEY, score);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
-        //PhotonNetwork.LocalPlayer.CustomProperties = hashtable;
     }
 
 

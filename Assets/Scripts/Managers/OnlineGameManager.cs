@@ -6,7 +6,6 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -198,27 +197,11 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
 
     public void ToggleReadyValue()
     {
-        if (PhotonNetwork.LocalPlayer.CustomProperties
-                    .ContainsKey(Constants.PLAYER_READY_TOGGLE_KEY))
-        {
-            bool ready = readyToggle.isOn;
-            
-        }
-        else
-        {
-            bool ready = readyToggle.isOn;
-            ExitGames.Client.Photon.Hashtable hashtable
-                = new ExitGames.Client.Photon.Hashtable();
-            hashtable.Add(Constants.PLAYER_READY_TOGGLE_KEY, ready);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
-        }
 
-    }
-
-    private void CheckIfPlayersReady()
-    {
-
-        
+        ExitGames.Client.Photon.Hashtable playerHashtable = PhotonNetwork.LocalPlayer.CustomProperties;
+        bool ready = readyToggle.isOn;
+        playerHashtable.Add(Constants.PLAYER_READY_TOGGLE_KEY, ready);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerHashtable);
     }
 
 }
