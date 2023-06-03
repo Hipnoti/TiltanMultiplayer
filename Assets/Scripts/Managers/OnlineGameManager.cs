@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -27,6 +29,9 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     [SerializeField] private TextMeshProUGUI countdownText;
     [SerializeField] private Button startGameButtonUI;
     [SerializeField] private SpawnPoint[] spawnPoints;
+    [SerializeField] private Toggle readyToggle;
+
+
 
     [Header("Character Selection")]
     [SerializeField] private TMP_Dropdown characterColorDropdown;
@@ -208,6 +213,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+
+
     private SpawnPoint GetSpawnPointByID(int targetID)
     {
         foreach (SpawnPoint spawnPoint in spawnPoints)
@@ -219,6 +226,14 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         return null;
     }
 
+    public void ToggleReadyValue()
+    {
+
+        ExitGames.Client.Photon.Hashtable playerHashtable = PhotonNetwork.LocalPlayer.CustomProperties;
+        bool ready = readyToggle.isOn;
+        playerHashtable.Add(Constants.PLAYER_READY_TOGGLE_KEY, ready);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerHashtable);
+    }
     public void LockInCharacter()
     {
         playerColorName = characterColorDropdown.options[characterColorDropdown.value].text;

@@ -19,7 +19,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     [SerializeField] private string roomNameToCreate;
     [SerializeField] private Button leaveRoomButton;
     [SerializeField] private Button startGameButton;
-    
+
+
     [Header("Debug Texts")]
     [SerializeField] private TextMeshProUGUI serverDebugTextUI;
     [SerializeField] private TextMeshProUGUI isConnectedToRoomDebugTextUI;
@@ -156,6 +157,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         hashtable.Add(Constants.PLAYER_STRENGTH_SCORE_PROPERTY_KEY, score);
         PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
     }
+
 
     public void StartGame()
     {
