@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -26,7 +29,9 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     [SerializeField] private TextMeshProUGUI countdownText;
     [SerializeField] private Button startGameButtonUI;
     [SerializeField] private SpawnPoint[] spawnPoints;
-    
+    [SerializeField] private Toggle readyToggle;
+
+
     private PlayerController localPlayerController;
 
     private bool isCountingForStartGame;
@@ -124,6 +129,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             photonView.RPC(ASK_FOR_RANDOM_SPAWN_POINT_RPC, RpcTarget.MasterClient);
             if (PhotonNetwork.IsMasterClient)
             {
+                //TODO if all ready then set interactible
                 startGameButtonUI.interactable = true;
             }
 
@@ -177,6 +183,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         }
     }
 
+
+
     private SpawnPoint GetSpawnPointByID(int targetID)
     {
         foreach (SpawnPoint spawnPoint in spawnPoints)
@@ -188,5 +196,29 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         return null;
     }
 
+    public void ToggleReadyValue()
+    {
+        if (PhotonNetwork.LocalPlayer.CustomProperties
+                    .ContainsKey(Constants.PLAYER_READY_TOGGLE_KEY))
+        {
+            bool ready = readyToggle.isOn;
+            
+        }
+        else
+        {
+            bool ready = readyToggle.isOn;
+            ExitGames.Client.Photon.Hashtable hashtable
+                = new ExitGames.Client.Photon.Hashtable();
+            hashtable.Add(Constants.PLAYER_READY_TOGGLE_KEY, ready);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
+        }
+
+    }
+
+    private void CheckIfPlayersReady()
+    {
+
+        
+    }
 
 }
