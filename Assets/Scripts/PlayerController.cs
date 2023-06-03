@@ -1,13 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using TMPro;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviourPun
+public class PlayerController : MonoBehaviourPunCallbacks
 {
     public bool canControl = false;
     [SerializeField] private int speed;
-    
+    [SerializeField] TMP_Text nicknameText;
+
+    private void Start()
+    {
+        nicknameText.text = photonView.Owner.NickName;
+    }
+
     // Update is called once per frame
     void Update()
     {

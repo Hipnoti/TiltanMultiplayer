@@ -5,6 +5,8 @@ using UnityEngine;
 public static class Constants 
 {
     public const string PLAYER_STRENGTH_SCORE_PROPERTY_KEY = "PlayerStrengthScore";
+    public const string SET_NICKNAME = "SetNickName";
+    public const string PLAYER_READY_TOGGLE_KEY = "PlayerReady";
     public const string CURRENT_ROOM_PLAYERS_PATTERN = "{0}/{1}";
     public const string NO_STRING = "No!";
     public const string YES_STRING = "Yes!";
