@@ -101,11 +101,10 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     void SpawnPlayer(int spawnPointID, bool[] takenSpawnPoints)
     {
         SpawnPoint spawnPoint = GetSpawnPointByID(spawnPointID);
-        localPlayerController =
-            PhotonNetwork.Instantiate(NETWORK_PLAYER_PREFAB_NAME, 
-                    spawnPoint.transform.position, 
-                    spawnPoint.transform.rotation)
-                .GetComponent<PlayerController>();
+        GameObject spawnedPlayer = PhotonNetwork.Instantiate(NETWORK_PLAYER_PREFAB_NAME,
+                    spawnPoint.transform.position,
+                    spawnPoint.transform.rotation);
+        localPlayerController = spawnedPlayer.GetComponent<PlayerController>();
         
         for (int i = 0; i < takenSpawnPoints.Length; i++)
         {
