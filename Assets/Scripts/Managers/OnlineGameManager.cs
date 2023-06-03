@@ -59,7 +59,8 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             startGameButtonUI.interactable = false;
         }
     }
-    
+
+
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         base.OnMasterClientSwitched(newMasterClient);
@@ -302,3 +303,14 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
 }
+
+    #region ? Idk why i added it
+    //void UpdateOrAddRoomPropriety(string proprietyName, object value)
+    //{
+    //    ExitGames.Client.Photon.Hashtable currentHash;
+    //    currentHash = PhotonNetwork.CurrentRoom.CustomProperties;
+    //    currentHash.Add(proprietyName, value);
+
+    //    PhotonNetwork.CurrentRoom.SetCustomProperties(currentHash);
+    //}
+    #endregion
