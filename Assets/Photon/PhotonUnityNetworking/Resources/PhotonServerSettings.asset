@@ -44,6 +44,8 @@ MonoBehaviour:
   - AskForRandomSpawnPoint
   - SpawnPlayer
   - RemoveCharacterChoice
+  - UpdateCharacterChoice
+  - EveryoneReadyCheck
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
