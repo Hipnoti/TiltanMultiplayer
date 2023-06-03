@@ -10,12 +10,13 @@ using Random = UnityEngine.Random;
 
 public class OnlineGameManager : MonoBehaviourPunCallbacks
 {
-    public const string NETWORK_PLAYER_PREFAB_NAME = "NetworkPlayerObject";
+    public const string NETWORK_PLAYER_PREFAB_NAME = "NetworkPlayerObject_";
  
     private const string GAME_STARTED_RPC = nameof(GameStarted);
     private const string COUNTDOWN_STARTED_RPC = nameof(CountdownStarted);
     private const string ASK_FOR_RANDOM_SPAWN_POINT_RPC = nameof(AskForRandomSpawnPoint);
     private const string SPAWN_PLAYER_CLIENT_RPC = nameof(SpawnPlayer);
+    private const string REMOVE_CHARACTER_CHOICE_RPC = nameof(RemoveCharacterChoice);
 
     private int someVariable;
     public bool hasGameStarted = false;
@@ -26,12 +27,22 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     [SerializeField] private TextMeshProUGUI countdownText;
     [SerializeField] private Button startGameButtonUI;
     [SerializeField] private SpawnPoint[] spawnPoints;
-    
+
+    [Header("Character Selection")]
+    [SerializeField] private TMP_Dropdown characterColorDropdown;
+    [SerializeField] private Button lockInCharacterButton;
+    [SerializeField] private TextMeshProUGUI selectedCharacterText;
+
+
+
     private PlayerController localPlayerController;
 
     private bool isCountingForStartGame;
     private float timeLeftForStartGame = 0;
-    
+
+    private string playerColorName;
+
+
     public void StartGameCountdown()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -70,6 +81,23 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
+    void RemoveCharacterChoice(string lockedInPlayerCharacterChoice)
+    {
+        List<TMP_Dropdown.OptionData> newOptions = new List<TMP_Dropdown.OptionData>();
+
+        for (int i = 0; i < characterColorDropdown.options.Count; i++)
+        {
+            print(characterColorDropdown.options[i].text);
+            if (characterColorDropdown.options[i].text == lockedInPlayerCharacterChoice)
+            {
+                continue;
+            }
+            newOptions.Add(characterColorDropdown.options[i]);
+        }
+        characterColorDropdown.options = newOptions;
+    }
+
+    [PunRPC]
     void AskForRandomSpawnPoint(PhotonMessageInfo messageInfo)
     {
         List<SpawnPoint> availableSpawnPoints = new List<SpawnPoint>();
@@ -98,7 +126,7 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
     {
         SpawnPoint spawnPoint = GetSpawnPointByID(spawnPointID);
         localPlayerController =
-            PhotonNetwork.Instantiate(NETWORK_PLAYER_PREFAB_NAME, 
+            PhotonNetwork.Instantiate(NETWORK_PLAYER_PREFAB_NAME + playerColorName, 
                     spawnPoint.transform.position, 
                     spawnPoint.transform.rotation)
                 .GetComponent<PlayerController>();
@@ -121,11 +149,14 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
             //             spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].position, 
             //             spawnPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].rotation)
             //         .GetComponent<PlayerController>();
-            photonView.RPC(ASK_FOR_RANDOM_SPAWN_POINT_RPC, RpcTarget.MasterClient);
-            if (PhotonNetwork.IsMasterClient)
-            {
-                startGameButtonUI.interactable = true;
-            }
+            
+            
+            //photonView.RPC(ASK_FOR_RANDOM_SPAWN_POINT_RPC, RpcTarget.MasterClient);
+            //if (PhotonNetwork.IsMasterClient)
+            //{
+            //    //TODO check if all players ready
+            //    startGameButtonUI.interactable = true;
+            //}
 
             gameModeText.text = PhotonNetwork.CurrentRoom.CustomProperties[Constants.GAME_MODE].ToString();
             foreach (KeyValuePair<int, Player>
@@ -188,5 +219,15 @@ public class OnlineGameManager : MonoBehaviourPunCallbacks
         return null;
     }
 
+    public void LockInCharacter()
+    {
+        playerColorName = characterColorDropdown.options[characterColorDropdown.value].text;
+        selectedCharacterText.text = playerColorName;
+        lockInCharacterButton.interactable = false;
+        characterColorDropdown.interactable = false;
+        photonView.RPC(REMOVE_CHARACTER_CHOICE_RPC,
+                RpcTarget.AllViaServer, playerColorName);
+
+    }
 
 }
