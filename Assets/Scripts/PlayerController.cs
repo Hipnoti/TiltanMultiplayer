@@ -30,9 +30,4 @@ public class PlayerController : MonoBehaviourPunCallbacks
                 transform.Translate(Vector3.right * Time.deltaTime * speed);
         }
     }
-
-    //[PunRPC]
-    //public void SetNickName(string name) {
-    //    nicknameText.text = name;
-    //}
 }
