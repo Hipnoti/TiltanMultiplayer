@@ -21,8 +21,6 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         base.OnConnectedToMaster();
     }
 
-
-
     public void CreateRoom()
     {
         PhotonNetwork.CreateRoom("MyRoom");
@@ -43,6 +41,17 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinedLobby();
         Debug.Log($"We successfully joined the lobby {PhotonNetwork.CurrentLobby}!");
+    }
+
+    public void JoinRandomRoom()
+    {
+        PhotonNetwork.JoinRandomRoom();
+    }
+
+    public override void OnJoinedRoom()
+    {
+        base.OnJoinedRoom();
+        Debug.Log("We successfully joined the room " + PhotonNetwork.CurrentRoom);
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
