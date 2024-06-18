@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEditor.SceneManagement;
 #endif
 
-public class EditorExtensions : MonoBehaviour
+public class EditorExtensions 
 {
     [MenuItem("Scenes/Menu Scene", false, 1)]
     public static void LoadMenu()

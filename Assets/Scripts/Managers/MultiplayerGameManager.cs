@@ -15,8 +15,10 @@ public class MultiplayerGameManager : MonoBehaviour
     
     private void Start()
     {
-        Transform targetSpawnPoint = PhotonNetwork.IsMasterClient ? masterClientSpawnPoint : peasantClientSpawnPoint;
+        // if(randomizeSpawnPoint)
+        // Transform targetSpawnPoint = PhotonNetwork.IsMasterClient ? masterClientSpawnPoint : peasantClientSpawnPoint;
         
-        PhotonNetwork.Instantiate(PlayerPrefabName, targetSpawnPoint.position, targetSpawnPoint.rotation);
+    //PhotonNetwork.Instantiate(PlayerPrefabName, targetSpawnPoint.position, targetSpawnPoint.rotation);    PhotonNetwork.Instantiate(PlayerPrefabName, targetSpawnPoint.position, targetSpawnPoint.rotation);
+        PhotonNetwork.Instantiate(PlayerPrefabName, Vector3.zero, Quaternion.identity);
     }
 }

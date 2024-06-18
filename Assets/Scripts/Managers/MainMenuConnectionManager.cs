@@ -158,6 +158,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
     {
         ToggleJoinRoomButtonsState(false);
         PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.NickName = "MyName";
         if(connectOnStart)
             Connect();
     }
@@ -177,7 +178,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
 
     private void RefreshCurrentRoomInfo()
     {
-        if (PhotonNetwork.CurrentRoom != null)
+        if (PhotonNetwork.InRoom)
         {
             currentRoomInfoPanel.SetActive(true);
             currentRoomPlayersNumber.SetText(string.Format(CURRENT_ROOM_NUMBER_OF_PLAYERS_STRING,
