@@ -23,6 +23,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
     [SerializeField] private TMP_InputField roomNameInputField;
 
     [SerializeField] private Button[] joinRoomButtons;
+    [SerializeField] private Button connectButton;
     
     [Header("Current Room Info")]
     [SerializeField] private GameObject currentRoomInfoPanel;
@@ -31,6 +32,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
     
     public void Connect()
     {
+        connectButton.interactable = false;
         PhotonNetwork.ConnectUsingSettings();
     }
 
@@ -44,7 +46,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);
-      //  cause == 
+        connectButton.interactable = true;
     }
 
     public void CreateRoom()
