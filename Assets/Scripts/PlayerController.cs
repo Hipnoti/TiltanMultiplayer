@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviourPun
 {
+    
     [SerializeField] private float speed = 10;
     private void Update()
     {

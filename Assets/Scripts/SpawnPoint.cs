@@ -2,8 +2,9 @@
 
     public class SpawnPoint : MonoBehaviour
     {
+        public int ID = 0;
         private bool isTaken = false;
-
+    
         public bool IsTaken 
         {
             get { return isTaken; }

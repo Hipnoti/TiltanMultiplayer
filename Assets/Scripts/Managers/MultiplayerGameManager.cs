@@ -23,7 +23,12 @@ public class MultiplayerGameManager : MonoBehaviourPun
 
     private const string CLIENT_IS_READY_RPC = nameof(ClientIsReady);
     private const string SET_SPAWN_POINT_RPC = nameof(SetSpawnPoint);
-        
+    private const string GAME_STARTED_RPC = nameof(GameStarted);
+
+    private PlayerController myPlayerController;
+
+    private int playersReady = 0;
+    
     public void SendReadyToMasterClient()
     {
         photonView.RPC(CLIENT_IS_READY_RPC, RpcTarget.MasterClient);
@@ -32,14 +37,14 @@ public class MultiplayerGameManager : MonoBehaviourPun
     
     private void Start()
     {
-        //Method A
-        // SpawnPoint targetSpawnPoint;
-        // if (randomizeSpawnPoint)
-        //     targetSpawnPoint = GetRandomSpawnPoint();
-        // else
-        //     targetSpawnPoint = defaultSpawnPoint;
-        //
-        // SpawnPlayer(targetSpawnPoint);
+      //  Method A
+         // SpawnPoint targetSpawnPoint;
+         // if (randomizeSpawnPoint)
+         //     targetSpawnPoint = GetRandomSpawnPoint();
+         // else
+         //     targetSpawnPoint = defaultSpawnPoint;
+         //
+         // SpawnPlayer(targetSpawnPoint);
     
     }
 
@@ -67,8 +72,9 @@ public class MultiplayerGameManager : MonoBehaviourPun
     void SpawnPlayer(SpawnPoint targetSpawnPoint)
     {
         targetSpawnPoint.Take();
-        PhotonNetwork.Instantiate(PlayerPrefabName,
+       GameObject playerGO = PhotonNetwork.Instantiate(PlayerPrefabName,
             targetSpawnPoint.transform.position, targetSpawnPoint.transform.rotation);
+       myPlayerController = playerGO.GetComponent<PlayerController>();
     }
 
     //Method A
@@ -79,20 +85,50 @@ public class MultiplayerGameManager : MonoBehaviourPun
     // }
 
    //Method B
-     [PunRPC]
-     private void ClientIsReady(PhotonMessageInfo messageInfo)
-     {
-         Debug.Log(messageInfo.Sender + " Is ready");
-         SpawnPoint randomSpawnPoint = GetRandomSpawnPoint();
-         randomSpawnPoint.Take();
-         
-         messageInfo.photonView.RPC(SET_SPAWN_POINT_RPC, messageInfo.Sender, randomSpawnPoint);
-     }
 
-     [PunRPC]
-     private void SetSpawnPoint(SpawnPoint spawnPoint)
-     {
-         Debug.Log("Recieved spawn point is " + spawnPoint);
-     }
-    
+   #region RPCS
+
+   [PunRPC]
+        private void ClientIsReady(PhotonMessageInfo messageInfo)
+        {
+            Debug.Log(messageInfo.Sender + " Is ready");
+            SpawnPoint randomSpawnPoint = GetRandomSpawnPoint();
+            randomSpawnPoint.Take();
+            
+            messageInfo.photonView.RPC(SET_SPAWN_POINT_RPC, messageInfo.Sender, randomSpawnPoint.ID);
+
+            playersReady++;
+            if (playersReady >= PhotonNetwork.CurrentRoom.PlayerCount)
+            {
+                photonView.RPC(GAME_STARTED_RPC, RpcTarget.All);
+            }
+        }
+        
+        /// <summary>
+        /// This will be invoked on the client
+        /// </summary>
+        /// <param name="spawnPoint"></param>
+        [PunRPC]
+        private void SetSpawnPoint(int spawnPointID)
+        {
+            foreach (var spawnPoint in randomSpawnPoints)
+            {
+                if (spawnPoint.ID == spawnPointID)
+                {
+                    SpawnPlayer(spawnPoint);
+                    break;
+                }
+            }
+        }
+   
+        [PunRPC]
+        private void GameStarted()
+        {
+            myPlayerController.enabled = true;
+            Debug.Log("The might master client has the Game Started");
+        }
+
+   #endregion
+     
+     
 }
