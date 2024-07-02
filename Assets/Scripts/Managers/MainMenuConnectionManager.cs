@@ -17,6 +17,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
     private const string GameSceneName = "Game Scene";
 
     [SerializeField] private bool connectOnStart = true;
+    [SerializeField] private int minimumPlayers = 2;
     
     [SerializeField] private TextMeshProUGUI debugPhotonText;
 
@@ -187,7 +188,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
                 PhotonNetwork.CurrentRoom.PlayerCount, PhotonNetwork.CurrentRoom.MaxPlayers));
             
             startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
-            startGameButton.interactable = PhotonNetwork.CurrentRoom.PlayerCount >= 2;
+            startGameButton.interactable = PhotonNetwork.CurrentRoom.PlayerCount >= minimumPlayers;
         }
         else
         {
