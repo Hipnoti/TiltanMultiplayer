@@ -45,7 +45,7 @@ public class MultiplayerGameManager : MonoBehaviourPun
          //     targetSpawnPoint = defaultSpawnPoint;
          //
          // SpawnPlayer(targetSpawnPoint);
-    
+         SendReadyToMasterClient();
     }
 
     SpawnPoint GetRandomSpawnPoint()

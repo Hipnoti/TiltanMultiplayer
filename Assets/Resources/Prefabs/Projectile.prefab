@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7913628279373737497}
   - component: {fileID: 8376203586491855669}
   - component: {fileID: 1174605645734384618}
-  - component: {fileID: 1086697951432841803}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -87,27 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &1086697951432841803
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2067296384862574469}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8553212794279514626
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,10 +97,11 @@ GameObject:
   - component: {fileID: 4731617906986102435}
   - component: {fileID: -4077915340820997003}
   - component: {fileID: 1260162739990443275}
-  - component: {fileID: 8140251344828279614}
+  - component: {fileID: 1553241596681547215}
+  - component: {fileID: 7051511132109776511}
   m_Layer: 0
   m_Name: Projectile
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -162,7 +141,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 8140251344828279614}
+  - {fileID: 1553241596681547215}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -178,8 +157,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7288c758caa9fd4eb1386df362a6eec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileColors:
+  - {fileID: 2100000, guid: 3e4ddc360c12e8b4db1bf38f70042711, type: 2}
+  - {fileID: 2100000, guid: dd9fec8f38bd9764bb864b99e54c7edb, type: 2}
+  - {fileID: 2100000, guid: 5db5c3a91581914438ba0e59adf1cddd, type: 2}
+  visualPanel: {fileID: 2067296384862574469}
   speed: 20
---- !u!114 &8140251344828279614
+--- !u!114 &1553241596681547215
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,3 +179,24 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!135 &7051511132109776511
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8553212794279514626}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
