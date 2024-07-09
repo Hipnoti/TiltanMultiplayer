@@ -5,8 +5,8 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-public class PlayerController : MonoBehaviourPunCallbacks
-{   
+public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
+{    
     private const string ProjectilePrefabName = "Prefabs\\Projectile";
     private const string ProjectileTag = "Projectile";
     private const string RecievedamageRPC = "RecieveDamage";
@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] private ParticleSystem hitParticle;
 
     [SerializeField] public Material[] projectileColors;
+    
+    [SerializeField] private int ourSerializedParameter;
     public void PlayHitEffect()
     {
         hitParticle.Play();
@@ -31,6 +33,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private Camera cachedCamera;
 
     private Vector3 raycastPos;
+    private Vector3 movementVector = new Vector3();
     
     private void Start()
     {
@@ -39,39 +42,38 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        if (!photonView.IsMine)
-            return;
-
-        Ray ray = cachedCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (photonView.IsMine)
         {
-            // hit.point contains the world position where the ray hit.
-            raycastPos = hit.point;
-        }
-        
-        Vector3 movementVector = new Vector3();
-        if (Input.GetKey(KeyCode.W))
-            movementVector.z = 1;
-        if (Input.GetKey(KeyCode.S))
-            movementVector.z = -1;
-        if (Input.GetKey(KeyCode.D))
-            movementVector.x = 1;
-        if (Input.GetKey(KeyCode.A))
-            movementVector.x = -1;
+            Ray ray = cachedCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                // hit.point contains the world position where the ray hit.
+                raycastPos = hit.point;
+            }
 
-        if(Input.GetKeyDown(KeyCode.Mouse0))
-            Shoot();
-        
-        Vector3 directionToFace = raycastPos - gameObject.transform.position;
-        Quaternion lookAtRotation = Quaternion.LookRotation(directionToFace);
-        Vector3 eulerRotation = lookAtRotation.eulerAngles;
-        eulerRotation.x = 0;
-        eulerRotation.z = 0;
-        transform.eulerAngles = eulerRotation;
-        transform.Translate(movementVector * (Time.deltaTime * speed));
-        
-        
+            movementVector = new Vector3();
+            if (Input.GetKey(KeyCode.W))
+                movementVector.z = 1;
+            if (Input.GetKey(KeyCode.S))
+                movementVector.z = -1;
+            if (Input.GetKey(KeyCode.D))
+                movementVector.x = 1;
+            if (Input.GetKey(KeyCode.A))
+                movementVector.x = -1;
+
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+                Shoot();
+
+            Vector3 directionToFace = raycastPos - gameObject.transform.position;
+            Quaternion lookAtRotation = Quaternion.LookRotation(directionToFace);
+            Vector3 eulerRotation = lookAtRotation.eulerAngles;
+            eulerRotation.x = 0;
+            eulerRotation.z = 0;
+            transform.eulerAngles = eulerRotation;
+            transform.Translate(movementVector * (Time.deltaTime * speed));
+        }
+
         playerAnimator.SetFloat(XMovement, movementVector.x);
         playerAnimator.SetFloat(ZMovement, movementVector.z);
     }
@@ -126,4 +128,23 @@ public class PlayerController : MonoBehaviourPunCallbacks
         Debug.Log("Hp left is " + HP);
     }
 
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            float somea, someb;
+            somea = movementVector.x;
+            someb = movementVector.z;
+            stream.SendNext(somea);
+            stream.SendNext(someb);
+        }
+        else
+        {
+            if (stream.IsReading)
+            {
+                movementVector.x = (float)stream.ReceiveNext();
+                movementVector.z = (float)stream.ReceiveNext();
+            }
+        }
+    }
 }

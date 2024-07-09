@@ -161,6 +161,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 3e4ddc360c12e8b4db1bf38f70042711, type: 2}
   - {fileID: 2100000, guid: dd9fec8f38bd9764bb864b99e54c7edb, type: 2}
   - {fileID: 2100000, guid: 5db5c3a91581914438ba0e59adf1cddd, type: 2}
+  meshRenderer: {fileID: 1174605645734384618}
   visualPanel: {fileID: 2067296384862574469}
   speed: 20
 --- !u!114 &1553241596681547215

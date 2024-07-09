@@ -40,16 +40,17 @@ public class MultiplayerGameManager : MonoBehaviourPun
     {
          SendReadyToMasterClient();
 
-         // if (PhotonNetwork.IsMasterClient)
-         // {
-         //     SpawnRoomObjectsMethodB();
-         // }
+         if (PhotonNetwork.IsMasterClient)
+         {
+             SpawnRoomObjectsMethodB();
+         }
     }
 
     private void SpawnRoomObjectsMethodA()
     {
         PhotonNetwork.Instantiate(PhysicalObjectPrefabName, Vector3.zero, Quaternion.identity);
     }
+    
     private void SpawnRoomObjectsMethodB()
     {
         PhotonNetwork.InstantiateRoomObject(PhysicalObjectPrefabName, Vector3.zero, Quaternion.identity);

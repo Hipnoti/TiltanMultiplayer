@@ -74,11 +74,11 @@ GameObject:
   m_Component:
   - component: {fileID: 5919323657308592750}
   - component: {fileID: -4360408117371997065}
-  - component: {fileID: 6667796635346987368}
   - component: {fileID: 2430499206618743472}
   - component: {fileID: 8161496814606064065}
   - component: {fileID: 6560574752324204530}
   - component: {fileID: 1487977592668364126}
+  - component: {fileID: -2741757102691853840}
   m_Layer: 0
   m_Name: Player Prefab
   m_TagString: Player
@@ -119,28 +119,13 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 3
   OwnershipTransfer: 0
-  observableSearch: 2
+  observableSearch: 0
   ObservedComponents:
-  - {fileID: 6667796635346987368}
+  - {fileID: 2430499206618743472}
+  - {fileID: -2741757102691853840}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &6667796635346987368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6344343524110246378}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
 --- !u!114 &2430499206618743472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,6 +147,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 3e4ddc360c12e8b4db1bf38f70042711, type: 2}
   - {fileID: 2100000, guid: dd9fec8f38bd9764bb864b99e54c7edb, type: 2}
   - {fileID: 2100000, guid: 5db5c3a91581914438ba0e59adf1cddd, type: 2}
+  ourSerializedParameter: 0
 --- !u!95 &8161496814606064065
 Animator:
   serializedVersion: 7
@@ -232,6 +218,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-2741757102691853840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344343524110246378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1001 &2746694133015307637
 PrefabInstance:
   m_ObjectHideFlags: 0

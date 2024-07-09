@@ -7,6 +7,7 @@ public class Projectile : MonoBehaviourPun, IPunInstantiateMagicCallback
     private const string PlayerTag = "Player";
 
     [SerializeField] private Material[] projectileColors;
+    [SerializeField] private MeshRenderer meshRenderer;
     public GameObject visualPanel;
     [SerializeField] private float speed = 20;
     
@@ -35,7 +36,7 @@ public class Projectile : MonoBehaviourPun, IPunInstantiateMagicCallback
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         object[] instantiationData = info.photonView.InstantiationData;
-        Debug.Log(instantiationData[0]);
+        meshRenderer.material = projectileColors[(int)instantiationData[0]];
     }
 }
 
