@@ -1616,7 +1616,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connectOnStart: 1
-  minimumPlayers: 1
+  minimumPlayers: 2
   debugPhotonText: {fileID: 330357805}
   roomNameInputField: {fileID: 547587212}
   joinRoomButtons:

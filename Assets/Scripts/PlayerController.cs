@@ -1,19 +1,33 @@
 ﻿using System;
+using System.Collections;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviourPun
 {   
     private const string ProjectilePrefabName = "Prefabs\\Projectile";
+    private const string ProjectileTag = "Projectile";
+    private const string RecievedamageRPC = "RecieveDamage";
     private static readonly int XMovement = Animator.StringToHash("XMovement");
     private static readonly int ZMovement = Animator.StringToHash("ZMovement");
+
+    [SerializeField] private int HP = 100;
     
     [Header("Projectile")]
     [SerializeField] private Transform projectileSpawnTransform;
     
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private float speed = 10;
+    [SerializeField] private ParticleSystem hitParticle;
 
+    [SerializeField] public Material[] projectileColors;
+    public void PlayHitEffect()
+    {
+        hitParticle.Play();
+    }
+    
     private Camera cachedCamera;
 
     private Vector3 raycastPos;
@@ -64,13 +78,51 @@ public class PlayerController : MonoBehaviourPun
 
     private void Shoot()
     {
+        int randomMaterialIndex = Random.Range(0, projectileColors.Length);
         GameObject projectile = PhotonNetwork.Instantiate(ProjectilePrefabName,
-            projectileSpawnTransform.position, projectileSpawnTransform.rotation);
+            projectileSpawnTransform.position, projectileSpawnTransform.rotation, 0,
+            new object []{ randomMaterialIndex});
+        
     }
 
-    private void OnDrawGizmos()
+    // private void OnDrawGizmos()
+    // {
+    //     Gizmos.color = Color.green;
+    //     Gizmos.DrawSphere(raycastPos, 2);
+    // }
+
+    private void OnTriggerEnter(Collider other)
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(raycastPos, 2);
+        if (other.CompareTag(ProjectileTag))
+        {
+            Projectile otherProjectile = other.GetComponent<Projectile>();
+            
+            if (otherProjectile.photonView.Owner.ActorNumber == photonView.Owner.ActorNumber)
+                return;
+
+            PlayHitEffect();
+            if (otherProjectile.photonView.IsMine)
+            {
+                //run login that affect other players! only the projectile owner should do that
+                StartCoroutine(DestroyDelay(5f, otherProjectile.gameObject));
+                photonView.RPC(RecievedamageRPC, RpcTarget.All, 10);
+            }
+            
+            otherProjectile.visualPanel.SetActive(false);
+            //add bool for projectile hit
+        }
+    }
+
+    IEnumerator DestroyDelay(float delay, GameObject otherObject)
+    {
+        yield return new WaitForSeconds(delay);
+        PhotonNetwork.Destroy(otherObject);
+    }
+
+    [PunRPC]
+    private void RecieveDamage(int damageAmount)
+    {
+        HP -= damageAmount;
+        Debug.Log("Hp left is " + HP);
     }
 }
