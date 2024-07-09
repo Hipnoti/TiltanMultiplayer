@@ -10,6 +10,7 @@ using Random = UnityEngine.Random;
 public class MultiplayerGameManager : MonoBehaviourPun
 {
     private const string PlayerPrefabName = "Prefabs\\Player Prefab";
+    private const string PhysicalObjectPrefabName = "Prefabs\\Physical Obstacle";
     
     [Header("Spawn Points")]
     [SerializeField] private bool randomizeSpawnPoint;
@@ -37,15 +38,21 @@ public class MultiplayerGameManager : MonoBehaviourPun
     
     private void Start()
     {
-      //  Method A
-         // SpawnPoint targetSpawnPoint;
-         // if (randomizeSpawnPoint)
-         //     targetSpawnPoint = GetRandomSpawnPoint();
-         // else
-         //     targetSpawnPoint = defaultSpawnPoint;
-         //
-         // SpawnPlayer(targetSpawnPoint);
          SendReadyToMasterClient();
+
+         // if (PhotonNetwork.IsMasterClient)
+         // {
+         //     SpawnRoomObjectsMethodB();
+         // }
+    }
+
+    private void SpawnRoomObjectsMethodA()
+    {
+        PhotonNetwork.Instantiate(PhysicalObjectPrefabName, Vector3.zero, Quaternion.identity);
+    }
+    private void SpawnRoomObjectsMethodB()
+    {
+        PhotonNetwork.InstantiateRoomObject(PhysicalObjectPrefabName, Vector3.zero, Quaternion.identity);
     }
 
     SpawnPoint GetRandomSpawnPoint()
@@ -129,6 +136,12 @@ public class MultiplayerGameManager : MonoBehaviourPun
         }
 
    #endregion
-     
+
+
+   [ContextMenu("Leave Room")]
+   void LeaveRoom()
+   {
+       PhotonNetwork.LeaveRoom(false);
+   }
      
 }

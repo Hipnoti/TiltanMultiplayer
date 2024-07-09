@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-public class PlayerController : MonoBehaviourPun
+public class PlayerController : MonoBehaviourPunCallbacks
 {   
     private const string ProjectilePrefabName = "Prefabs\\Projectile";
     private const string ProjectileTag = "Projectile";
@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviourPun
     //     Gizmos.color = Color.green;
     //     Gizmos.DrawSphere(raycastPos, 2);
     // }
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(ProjectileTag))
@@ -125,4 +125,5 @@ public class PlayerController : MonoBehaviourPun
         HP -= damageAmount;
         Debug.Log("Hp left is " + HP);
     }
+
 }
