@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class MultiplayerGameManager : MonoBehaviourPun
+public class MultiplayerGameManager : MonoBehaviourPunCallbacks
 {
     private const string PlayerPrefabName = "Prefabs\\Player Prefab";
     private const string PhysicalObjectPrefabName = "Prefabs\\Physical Obstacle";
@@ -21,7 +23,7 @@ public class MultiplayerGameManager : MonoBehaviourPun
 
     [Header("UI")] 
     [SerializeField] private Button readyButton;
-
+    
     private const string CLIENT_IS_READY_RPC = nameof(ClientIsReady);
     private const string SET_SPAWN_POINT_RPC = nameof(SetSpawnPoint);
     private const string GAME_STARTED_RPC = nameof(GameStarted);
@@ -29,13 +31,40 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private PlayerController myPlayerController;
 
     private int playersReady = 0;
+
+    [SerializeField] List<int> randomWeaponsToSpawn;
     
     public void SendReadyToMasterClient()
     {
         photonView.RPC(CLIENT_IS_READY_RPC, RpcTarget.MasterClient);
         readyButton.interactable = false;
     }
+
+    [ContextMenu("Switch Master Client")]
+    public void ChangeMasterClient()
+    {
+        Player candidateMC = PhotonNetwork.LocalPlayer.GetNext();
+
+        bool success = PhotonNetwork.SetMasterClient(candidateMC);
+        Debug.Log("set master client result " + success);
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        base.OnMasterClientSwitched(newMasterClient);
+        Debug.Log("New master client is " + newMasterClient + ", all hail him!");
+    }
     
+    public void SpawnNextRandomWeapon()
+    {
+        if (randomWeaponsToSpawn.Count > 0)
+        {
+            int nextWeaponIndex = randomWeaponsToSpawn[0];
+            randomWeaponsToSpawn.RemoveAt(0);
+            Debug.Log("Imagine we spawn here weapon index" + nextWeaponIndex);
+        }
+    }
+
     private void Start()
     {
          SendReadyToMasterClient();
@@ -55,6 +84,8 @@ public class MultiplayerGameManager : MonoBehaviourPun
     {
         PhotonNetwork.InstantiateRoomObject(PhysicalObjectPrefabName, Vector3.zero, Quaternion.identity);
     }
+
+    
 
     SpawnPoint GetRandomSpawnPoint()
     {
