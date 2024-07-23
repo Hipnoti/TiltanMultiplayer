@@ -55,7 +55,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         RoomOptions roomOptions = new RoomOptions()
         {
             MaxPlayers = 4,
-            PlayerTtl = 10000
+            PlayerTtl = 30000
         };
         PhotonNetwork.CreateRoom("MyRoom",roomOptions);
         ToggleJoinRoomButtonsState(false);
