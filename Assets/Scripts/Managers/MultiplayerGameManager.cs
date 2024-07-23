@@ -55,6 +55,12 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
         Debug.Log("New master client is " + newMasterClient + ", all hail him!");
     }
     
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        Debug.Log($"Player {otherPlayer} has left the room with inactive {otherPlayer.IsInactive}");
+    }
+    
     public void SpawnNextRandomWeapon()
     {
         if (randomWeaponsToSpawn.Count > 0)
@@ -64,6 +70,12 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
             Debug.Log("Imagine we spawn here weapon index" + nextWeaponIndex);
         }
     }
+    
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom(true);
+    }
+
 
     private void Start()
     {
@@ -168,12 +180,6 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
         }
 
    #endregion
+   
 
-
-   [ContextMenu("Leave Room")]
-   void LeaveRoom()
-   {
-       PhotonNetwork.LeaveRoom(false);
-   }
-     
 }
