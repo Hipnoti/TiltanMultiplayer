@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if (photonView.IsMine)
+        if (photonView.AmOwner)
         {
             Ray ray = cachedCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
