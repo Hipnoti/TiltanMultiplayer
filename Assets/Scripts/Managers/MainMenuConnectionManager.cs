@@ -7,6 +7,7 @@ using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 
 public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
@@ -43,7 +44,10 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         Debug.Log("We successfuly connected to Photon");
         base.OnConnectedToMaster();
         ToggleJoinRoomButtonsState(true);
+        UpdatePlayerProperties();
     }
+
+ 
 
     public override void OnDisconnected(DisconnectCause cause)
     {
@@ -53,10 +57,18 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
 
     public void CreateRoom()
     {
+        Hashtable customRoomProperties = new Hashtable();
+        customRoomProperties["GameMode"] = "PVP";
+        customRoomProperties["MatchStarted"] = false;
+        string[] customPropertiesForLobby = new []{ "PVP" };
+        
         RoomOptions roomOptions = new RoomOptions()
         {
             MaxPlayers = 4,
-            PlayerTtl = 10000
+            PlayerTtl = 25000,
+            CustomRoomProperties =  customRoomProperties,
+            CustomRoomPropertiesForLobby =  customPropertiesForLobby,
+            
         };
         PhotonNetwork.CreateRoom("MyRoom",roomOptions);
         ToggleJoinRoomButtonsState(false);
@@ -180,6 +192,11 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
             PhotonNetwork.LoadLevel(GameSceneName);
         }
     }
+    
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        base.OnPlayerPropertiesUpdate(targetPlayer, changedProps);
+    }
 
     private void Start()
     {
@@ -219,4 +236,16 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
             currentRoomInfoPanel.SetActive(false);
         }
     }
+    
+    private void UpdatePlayerProperties()
+    {
+        Hashtable playerProperties = new Hashtable();
+        playerProperties["Nickname"] = "Alon";
+        playerProperties["DiscordID"] = "#Alon" + Random.Range(1000, 9999);
+        playerProperties["League"] = Random.Range(1, 9);
+        playerProperties["UserID"] = SystemInfo.deviceUniqueIdentifier;
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerProperties);
+    }
+    
+    
 }
