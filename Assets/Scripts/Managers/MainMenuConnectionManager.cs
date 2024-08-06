@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Mime;
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
@@ -60,6 +61,19 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom("MyRoom",roomOptions);
         ToggleJoinRoomButtonsState(false);
     }
+    
+    public void CreateRoomWithFilters()
+    {
+        RoomOptions roomOptions = new RoomOptions()
+        {
+            MaxPlayers = 4,
+            PlayerTtl = 10000, 
+            CustomRoomProperties = new Hashtable() { { "MapName", "de_dust2" } },
+            CustomRoomPropertiesForLobby = new[] {"MapName"}
+        };
+        PhotonNetwork.CreateRoom("MyRoom",roomOptions);
+        ToggleJoinRoomButtonsState(false);
+    }
 
     public override void OnCreatedRoom()
     {
@@ -89,6 +103,14 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRandomRoom();
         ToggleJoinRoomButtonsState(false);
     }
+    
+    public void JoinRandomRoomWithFilters()
+    {
+        PhotonNetwork.JoinRandomRoom(new Hashtable
+            { { "MapName", "de_dust2" } }, 0);
+        ToggleJoinRoomButtonsState(false);
+    }
+
 
     public void JoinRoomByName()
     {
@@ -126,6 +148,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         base.OnJoinRandomFailed(returnCode, message);
+        Debug.LogError("Join random room failed " + message);
         ToggleJoinRoomButtonsState(true);
     }
 
